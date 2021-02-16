@@ -29,9 +29,36 @@ namespace Acaddemicts.EF.Controllers
         {
             using (var ctx = new SchoolContext())
             {
-                var departments = await ctx.Departments.ToListAsync();
+                var departments = await ctx.Departments.Include(x => x.Administrator)
+                    .Select(x => new { DepartmentName = x.Name, Administrator = $"{x.Administrator.FirstName} {x.Administrator.LastName}" }).ToListAsync();
+
                 return Ok(departments);
             }
+        }
+
+        [HttpPost]
+        [Route("withadmin")]
+        public async Task<IActionResult> AddDepartmentWithAdministrator(string name, string firstName, string lastName)
+        {
+            using (var ctx = new SchoolContext())
+            {
+                ctx.Departments.Add(new Department
+                {
+                    Name = name,
+                    StartDate = DateTime.Now,
+                    Administrator = new Person
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        IsEnrolled = false,
+                        EnrollmentDate = null,
+                        HireDate = DateTime.Now
+                    }
+                });
+                await ctx.SaveChangesAsync();
+            }
+
+            return Ok();
         }
     }
 }

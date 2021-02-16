@@ -9,5 +9,7 @@ namespace Acaddemicts.EF.Model.Entities
         public int DepartmentId { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
+        public int AdministratorId { get; set; }
+        public virtual Person Administrator { get; set; }
     }
 }
