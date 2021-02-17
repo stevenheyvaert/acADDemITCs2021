@@ -21,6 +21,11 @@ namespace Acaddemicts.EF.Model
                .HasValue<Instructor>(false)
                .HasValue<Student>(true);
 
+            modelBuilder.Entity<Course>()
+               .HasDiscriminator<bool>("IsOnLine")
+               .HasValue<OnlineCourse>(true)
+               .HasValue<OnSiteCourse>(false);
+
             base.OnModelCreating(modelBuilder);
         }
 
