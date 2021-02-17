@@ -12,6 +12,18 @@ namespace Acaddemicts.EF.Model
 
         public DbSet<Person> Persons { get; set; }
 
+        public DbSet<Course> Courses { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Person>()
+               .HasDiscriminator<bool>("IsEnrolled")
+               .HasValue<Instructor>(false)
+               .HasValue<Student>(true);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

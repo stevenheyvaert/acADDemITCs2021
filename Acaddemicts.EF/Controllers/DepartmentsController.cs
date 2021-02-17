@@ -46,12 +46,10 @@ namespace Acaddemicts.EF.Controllers
                 {
                     Name = name,
                     StartDate = DateTime.Now,
-                    Administrator = new Person
+                    Administrator = new Instructor
                     {
                         FirstName = firstName,
                         LastName = lastName,
-                        IsEnrolled = false,
-                        EnrollmentDate = null,
                         HireDate = DateTime.Now
                     }
                 });

@@ -4,14 +4,16 @@ using Acaddemicts.EF.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Acaddemicts.EF.Model.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    partial class SchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20210217090823_AddCourses")]
+    partial class AddCourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +41,7 @@ namespace Acaddemicts.EF.Model.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("Acaddemicts.EF.Model.Entities.Department", b =>
@@ -72,8 +74,14 @@ namespace Acaddemicts.EF.Model.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("HireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsEnrolled")
                         .HasColumnType("bit");
@@ -84,28 +92,6 @@ namespace Acaddemicts.EF.Model.Migrations
                     b.HasKey("PersonId");
 
                     b.ToTable("Persons");
-
-                    b.HasDiscriminator<bool>("IsEnrolled");
-                });
-
-            modelBuilder.Entity("Acaddemicts.EF.Model.Entities.Instructor", b =>
-                {
-                    b.HasBaseType("Acaddemicts.EF.Model.Entities.Person");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasDiscriminator().HasValue(false);
-                });
-
-            modelBuilder.Entity("Acaddemicts.EF.Model.Entities.Student", b =>
-                {
-                    b.HasBaseType("Acaddemicts.EF.Model.Entities.Person");
-
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasDiscriminator().HasValue(true);
                 });
 
             modelBuilder.Entity("Acaddemicts.EF.Model.Entities.Course", b =>

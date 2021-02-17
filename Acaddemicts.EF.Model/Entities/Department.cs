@@ -11,5 +11,6 @@ namespace Acaddemicts.EF.Model.Entities
         public DateTime StartDate { get; set; }
         public int AdministratorId { get; set; }
         public virtual Person Administrator { get; set; }
+        public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
     }
 }

@@ -28,16 +28,27 @@ namespace Acaddemicts.EF.Controllers
             {
                 for (int i = 0; i < howMany; i++)
                 {
-                    var isEnrolled = NextBool(r);
-                    var person = new Person
+                    var isStudent = NextBool(r);
+                    if (isStudent)
                     {
-                        LastName = personGenerator.GenerateRandomLastName(),
-                        FirstName = personGenerator.GenerateRandomFirstName(),
-                        IsEnrolled = isEnrolled,
-                        EnrollmentDate = isEnrolled ? DateTime.Now : default(DateTime?),
-                        HireDate = isEnrolled ? default(DateTime?) : DateTime.Now,
-                    };
-                    ctx.Persons.Add(person);
+                        var person = new Student
+                        {
+                            LastName = personGenerator.GenerateRandomLastName(),
+                            FirstName = personGenerator.GenerateRandomFirstName(),
+                            EnrollmentDate = DateTime.Now,
+                        };
+                        ctx.Persons.Add(person);
+                    }
+                    else
+                    {
+                        var person = new Instructor
+                        {
+                            LastName = personGenerator.GenerateRandomLastName(),
+                            FirstName = personGenerator.GenerateRandomFirstName(),
+                            HireDate = DateTime.Now,
+                        };
+                        ctx.Persons.Add(person);
+                    }
                 }
 
                 await ctx.SaveChangesAsync();
@@ -52,6 +63,28 @@ namespace Acaddemicts.EF.Controllers
             using (var ctx = new SchoolContext())
             {
                 var departments = await ctx.Persons.ToListAsync();
+                return Ok(departments);
+            }
+        }
+
+        [HttpGet]
+        [Route("students")]
+        public async Task<IActionResult> GetAllStudents()
+        {
+            using (var ctx = new SchoolContext())
+            {
+                var departments = await ctx.Persons.OfType<Student>().ToListAsync();
+                return Ok(departments);
+            }
+        }
+
+        [HttpGet]
+        [Route("instructors")]
+        public async Task<IActionResult> GetAllInstructors()
+        {
+            using (var ctx = new SchoolContext())
+            {
+                var departments = await ctx.Persons.OfType<Instructor>().ToListAsync();
                 return Ok(departments);
             }
         }
