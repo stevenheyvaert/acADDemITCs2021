@@ -13,6 +13,34 @@ namespace Acaddemicts.EF.Controllers
     public class LinqQueryController : Controller
     {
         [HttpGet]
+        [Route("Part7")]
+        public IActionResult TestQuery()
+        {
+            using (var ctx = new SchoolContext())
+            {
+                var instructorNew = new Instructor { LastName = "LAST", FirstName = "FIRST", HireDate = DateTime.Now };
+                ctx.Persons.Add(instructorNew);
+
+
+                var instructorOld = ctx.Persons.OfType<Instructor>().First(x => x.LastName == "Zheng");
+                var newDepartment = new Department { Name = "DEPNEW", StartDate = DateTime.Now, Budget = 5000 };
+                
+
+                newDepartment.Administrator = instructorNew;
+
+                newDepartment.AdministratorId = instructorOld.PersonId;
+
+                ctx.Departments.Add(newDepartment);
+
+                ctx.SaveChanges();
+
+                var lastName = ctx.Departments.Include(x => x.Administrator).First(x => x.Name == "DEPNEW").Administrator.LastName;
+                return Ok(lastName);
+            }
+
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetLinqQuery(int number)
         {
             using (var ctx = new SchoolContext())
