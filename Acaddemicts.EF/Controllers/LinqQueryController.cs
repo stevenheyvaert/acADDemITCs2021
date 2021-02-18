@@ -48,12 +48,9 @@ namespace Acaddemicts.EF.Controllers
                         // Geef de lijst van punten van alle studenten gesorteerd per student en naam van de cursus. 
                         // Geef volgende gegevens terug: naam en voornaam student, naam van de cursus, resultaat(grade).
                         var listStudents = await ctx.CourseGrade
-                                .Include(x => x.Course)
-                                .Include(x => x.Student)
                                 .OrderBy(x => x.Student.LastName)
                                 .ThenBy(x => x.Course.Title)
                                 .Where(x => x.Grade.HasValue)
-                                .Where(x => x.Student != null)
                                 .Select(x => $"{x.Student.LastName} {x.Student.FirstName} {x.Course.Title} {x.Grade}").ToListAsync();
                         return Ok(listStudents);
                     case 8:
@@ -63,7 +60,6 @@ namespace Acaddemicts.EF.Controllers
                     case 9:
                         // Geef het totaal aantal studenten die resultaten hebben behaald voor cursussen in een departement waar het budget groter is dan 200000.
                         var totalStudents = await ctx.CourseGrade
-                                .Include(x => x.Course)
                                 .Where(x => x.Student.EnrollmentDate > DateTime.MinValue && x.Grade.HasValue && x.Course.Department.Budget > 200_000)
                                 .Select(x => x.StudentId)
                                 .Distinct()
