@@ -26,6 +26,22 @@ namespace Acaddemicts.EF.Model
                .HasValue<OnlineCourse>(true)
                .HasValue<OnSiteCourse>(false);
 
+            modelBuilder.Entity<CourseGrade>()
+                .Property(x => x.Grade)
+                .HasColumnType("decimal(18, 6)");
+
+            modelBuilder.Entity<CourseInstructor>()
+                .HasKey(nameof(CourseInstructor.CourseId), nameof(CourseInstructor.InstructorId));
+
+            modelBuilder.Entity<CourseInstructor>()
+                .HasOne(x => x.Course).WithMany(x => x.CourseInstructors)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CourseInstructor>()
+                .HasOne(x => x.Instructor).WithMany(x => x.CourseInstructors)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
             base.OnModelCreating(modelBuilder);
         }
 
