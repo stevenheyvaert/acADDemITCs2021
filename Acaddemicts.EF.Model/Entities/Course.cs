@@ -13,6 +13,7 @@ namespace Acaddemicts.EF.Model.Entities
         public int DepartmentId { get; set; }
         public virtual Department Department { get; set; }
         public virtual ICollection<CourseInstructor> CourseInstructors { get; set; } = new HashSet<CourseInstructor>();
+        public virtual ICollection<CourseGrade> CourseGrades { get; set; } = new HashSet<CourseGrade>();
     }
 
     public class OnSiteCourse : Course

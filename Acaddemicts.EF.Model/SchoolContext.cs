@@ -14,6 +14,8 @@ namespace Acaddemicts.EF.Model
 
         public DbSet<Course> Courses { get; set; }
 
+        public DbSet<CourseGrade> CourseGrade { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>()
@@ -39,6 +41,14 @@ namespace Acaddemicts.EF.Model
 
             modelBuilder.Entity<CourseInstructor>()
                 .HasOne(x => x.Instructor).WithMany(x => x.CourseInstructors)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CourseGrade>()
+                .HasOne(x => x.Course).WithMany(x => x.CourseGrades)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CourseGrade>()
+                .HasOne(x => x.Student).WithMany(x => x.CourseGrades)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
