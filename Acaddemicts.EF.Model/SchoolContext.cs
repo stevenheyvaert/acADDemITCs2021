@@ -14,8 +14,6 @@ namespace Acaddemicts.EF.Model
 
         public DbSet<Course> Courses { get; set; }
 
-        public DbSet<CourseGrade> CourseGrade { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>()
