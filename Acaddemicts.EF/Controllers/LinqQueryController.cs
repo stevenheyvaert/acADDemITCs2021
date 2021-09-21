@@ -49,13 +49,17 @@ namespace Acaddemicts.EF.Controllers
                 {
                     case 1:
                         // Add a query to only display the OnSiteCourse records, sorted on Title
-                        var onsiteCourses = await ctx.Courses.OfType<OnSiteCourse>().OrderBy(x => x.Title).ToListAsync();
+                        var onsiteCourses = await ctx.Courses.OfType<OnSiteCourse>()
+                            .OrderBy(x => x.Title)
+                            .Select(x => new { x.Title, x.Location, x.Time, x.Days})
+                            .ToListAsync();
                         return Ok(onsiteCourses);
                     case 2:
                         // Add a query to only display the OnLineCourse records, sorted on Title, then by Url
                         var onLineCourses = await ctx.Courses.OfType<OnlineCourse>()
                             .OrderBy(x => x.Title)
                             .ThenBy(x => x.Url)
+                            .Select(x => new { x.Title, x.Url })
                             .ToListAsync();
                         return Ok(onLineCourses);
                     case 3:
@@ -75,11 +79,14 @@ namespace Acaddemicts.EF.Controllers
                     case 5:
                         // Add a query to show the students, subscribed before 1/9/2004.
                         var studentsBeforeSept2004 = await ctx.Persons.OfType<Student>()
-                            .Where(x => x.EnrollmentDate < new DateTime(2004, 9, 1)).ToListAsync();
+                            .Where(x => x.EnrollmentDate < new DateTime(2004, 9, 1))
+                            .Select(x => new { x.LastName, x.FirstName, x.EnrollmentDate})
+                            .ToListAsync();
                         return Ok(studentsBeforeSept2004);
                     case 6:
                         // Add a query to list the departments with courses, having credits less than 3.
-                        var depCredits = await ctx.Departments.Where(x => x.Courses.Any(y => y.Credits < 3)).ToListAsync();
+                        var depCredits = await ctx.Departments.Where(x => x.Courses.Any(y => y.Credits < 3))
+                            .Select(x => new {x.Name }).ToListAsync();
                         return Ok(depCredits);
                     case 7:
                         // Add a list of results from all students, sorted by student name and course name.  
