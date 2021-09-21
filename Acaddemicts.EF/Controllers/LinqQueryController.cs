@@ -67,7 +67,7 @@ namespace Acaddemicts.EF.Controllers
                                 .OrderBy(x => x.Student.LastName)
                                 .ThenBy(x => x.Course.Title)
                                 .Where(x => x.Grade.HasValue)
-                                .Select(x => $"{x.Student.LastName} {x.Student.FirstName} {x.Course.Title} {x.Grade}").ToListAsync();
+                                .Select(x => $"{x.Student.LastName} {x.Student.FirstName} {x.Course.Title} {x.Grade:0.0}").ToListAsync();
                         return Ok(listStudents);
                     case 8:
                         // Return a list of all distinct surnames of instructors.
@@ -86,19 +86,19 @@ namespace Acaddemicts.EF.Controllers
                         var averagePerStudent = await ctx.Persons.OfType<Student>()
                                 .OrderBy(x => x.LastName)
                                 .ThenBy(x => x.FirstName)
-                                .Select(x => $"{x.LastName} {x.FirstName} {x.CourseGrades.Average(y => y.Grade)}").ToListAsync();
+                                .Select(x => $"{x.LastName} {x.FirstName} {x.CourseGrades.Average(y => y.Grade):0.00}").ToListAsync();
                         return Ok(averagePerStudent);
                     case 11:
                         // Return the list of lowest grades per course.
                         var lowestPerCourse = await ctx.Courses
                                 .Where(x => x.CourseGrades.Any(y => y.Grade.HasValue))
-                                .Select(x => $"{x.Title} {x.CourseGrades.Min(y => y.Grade)}").ToListAsync();
+                                .Select(x => $"{x.Title} {x.CourseGrades.Min(y => y.Grade):0.00}").ToListAsync();
                         return Ok(lowestPerCourse);
                     case 12:
                         // Return the list of highest grade per department.
                         var highestPerDept = await ctx.Departments
                                 .Where(x => x.Courses.SelectMany(y => y.CourseGrades).Any(z => z.Grade.HasValue))
-                                .Select(x => $"{x.Name} {x.Courses.SelectMany(y => y.CourseGrades).Max(z => z.Grade)}").ToListAsync();
+                                .Select(x => $"{x.Name} {x.Courses.SelectMany(y => y.CourseGrades).Max(z => z.Grade):0.00}").ToListAsync();
                         return Ok(highestPerDept);
                     case 13:
                         // Return a list of students, subscribed in 2004, sorted by name, surname
